@@ -1309,6 +1309,20 @@
 
     //#region Inventory
     if (currentPage == PAGE_INVENTORY) {
+        $(document).on('keydown', function(event) {
+            if (event.key === 's') {
+                $('.quick_sell_custom').click();
+            }
+        });
+        function removeFooter() {
+            if ($('#footer')) {
+                $('#footer').remove();
+            }
+        }
+        var observer = new MutationObserver(function() {
+            removeFooter();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
 
         function onQueueDrain() {
             if (itemQueue.length() == 0 && sellQueue.length() == 0 && scrapQueue.length() == 0 && boosterQueue.length() == 0) {
@@ -2180,6 +2194,7 @@
         }
 
         async function updateInventorySelection(selectedItem) {
+            $('._3JCkAyd9cnB90tRcDLPp4W._3nHL7awgK1Qei1XivGvHMK').eq(1).remove();
             if (getSettingWithDefault(SETTING_QUICK_SELL_BUTTONS) != 1) {
                 return;
             }
@@ -2302,7 +2317,7 @@
                     ownerActions.append(buttons);
 
                     ownerActions.append(`<div id="sell_button" style="display:flex">
-                        <input id="quick_sell_input" style="background-color: black;color: white;border: transparent;max-width:65px;text-align:center;" type="number" value="${((orderbook.lowest_sell_order || 0) / 100).toFixed(2)}" step="0.01" />&nbsp;
+                        <input id="quick_sell_input" style="background-color: black;color: white;border: transparent;max-width:65px;text-align:center;" type="number" step="0.01" />&nbsp;
                         <a class="item_market_action_button item_market_action_button_green quick_sell_custom">
                             <span class="item_market_action_button_edge item_market_action_button_left"></span>
                             <span class="item_market_action_button_contents">➜ Sell</span>
@@ -2310,7 +2325,7 @@
                             <span class="item_market_action_button_preload"></span>
                         </a>
                     </div>`);
-
+                    $('#quick_sell_input').focus();
                     $('.quick_sell').on(
                         'click',
                         function () {
